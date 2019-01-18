@@ -1,4 +1,6 @@
+
 import ConfigParser
+import os
 
 from flask import Flask
 from flask import redirect
@@ -7,13 +9,17 @@ from flask import session
 from flask import url_for
 from re import escape
 
+from matplotlib.finance import md5
+
 app = Flask(__name__)
+
 
 @app.route('/')
 def index():
     if 'username' in session:
         return 'Logged in as %s' % escape(session['username'])
     return 'You are not logged in'
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -27,11 +33,13 @@ def login():
         </form>
     '''
 
+
 @app.route('/logout')
 def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
     return redirect(url_for('index'))
+
 
 conf = ConfigParser.SafeConfigParser()
 conf.read("../conf/apps.ini")
